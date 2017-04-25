@@ -1,6 +1,6 @@
 // @flow
 import jq from 'jquery'
-import { forEach, isNull } from 'lodash'
+import { forEach, isNull, merge } from 'lodash'
 
 type Request = {
   abort: () => void;
@@ -10,6 +10,8 @@ type Request = {
 type Method = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
 type Options = {
   method: Method;
+  headers?: ?{ [key: string]: string };
+  withCredentials: boolean;
   onProgress?: (num: number) => mixed;
   data?: ?{ [key: string]: mixed };
 }
@@ -31,7 +33,13 @@ function xhrWithProgress (options: {onProgress?: (value: number) => mixed}) {
 }
 
 function ajaxOptions (options: Options): ?{} {
-  if (options.method === 'GET') return { data: options.data }
+  if (options.method === 'GET') {
+    return {
+      data: options.data,
+      headers: options.headers,
+      withCredentials: options.withCredentials
+    }
+  }
 
   const formData = new FormData()
   let hasFile = false
@@ -50,6 +58,8 @@ function ajaxOptions (options: Options): ?{} {
       cache: false,
       processData: false,
       data: formData,
+      withCredentials: options.withCredentials,
+      headers: options.headers,
       xhr: xhrWithProgress(options),
       contentType: false
     })
@@ -57,6 +67,8 @@ function ajaxOptions (options: Options): ?{} {
 
   return Object.assign({}, baseOptions, {
     contentType: 'application/json',
+    headers: options.headers,
+    withCredentials: options.withCredentials,
     data: options.data ? JSON.stringify(options.data) : null
   })
 }
@@ -90,32 +102,33 @@ function ajax (url: string, options: Options): Request {
 
 export default {
   apiPath: '',
+  commonOptions: {},
 
   get (path: string, data: ?{}, options?: {} = {}): Request {
     return ajax(
       `${this.apiPath}${path}`,
-      Object.assign({}, { method: 'GET', data }, options)
+      merge({}, { method: 'GET', data }, this.commonOptions, options)
     )
   },
 
   post (path: string, data: ?{}, options?: {} = {}): Request {
     return ajax(
       `${this.apiPath}${path}`,
-      Object.assign({}, { method: 'POST', data }, options)
+      merge({}, { method: 'POST', data }, this.commonOptions, options)
     )
   },
 
   put (path: string, data: ?{}, options?: {} = {}): Request {
     return ajax(
       `${this.apiPath}${path}`,
-      Object.assign({}, { method: 'PUT', data }, options)
+      merge({}, { method: 'PUT', data }, this.commonOptions, options)
     )
   },
 
   del (path: string, options?: {} = {}): Request {
     return ajax(
       `${this.apiPath}${path}`,
-      Object.assign({}, { method: 'DELETE' }, options)
+      merge({}, { method: 'DELETE' }, this.commonOptions, options)
     )
   }
 }

@@ -2,6 +2,12 @@ import adapter from '../src'
 import jq from 'jquery'
 
 adapter.apiPath = '/api'
+adapter.commonOptions = {
+  headers: {
+    'SomeHeader': 'test'
+  },
+  withCredentials: true
+}
 
 const noop = () => {}
 
@@ -73,7 +79,11 @@ describe('adapter', () => {
         return ret.promise.then((vals) => {
           expect(vals).toEqual(values)
           expect(jq.ajax.mock.calls[0][0]).toBe('/api/users')
-          expect(jq.ajax.mock.calls[0][1]).toEqual({ data })
+          expect(jq.ajax.mock.calls[0][1]).toEqual({
+            data,
+            headers: { 'SomeHeader': 'test' },
+            withCredentials: true
+          })
         })
       })
     })
@@ -122,6 +132,8 @@ describe('adapter', () => {
           expect(jq.ajax.mock.calls[0][1]).toEqual({
             method: 'POST',
             contentType: 'application/json',
+            headers: { 'SomeHeader': 'test' },
+            withCredentials: true,
             data: '{"name":"paco"}'
           })
         })
@@ -199,6 +211,8 @@ describe('adapter', () => {
           expect(jq.ajax.mock.calls[0][1]).toEqual({
             method: 'PUT',
             contentType: 'application/json',
+            headers: { 'SomeHeader': 'test' },
+            withCredentials: true,
             data: '{"name":"paco"}'
           })
         })
@@ -247,6 +261,8 @@ describe('adapter', () => {
           expect(jq.ajax.mock.calls[0][1]).toEqual({
             method: 'DELETE',
             contentType: 'application/json',
+            headers: { 'SomeHeader': 'test' },
+            withCredentials: true,
             data: null
           })
         })
