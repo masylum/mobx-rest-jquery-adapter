@@ -11,7 +11,7 @@ type Method = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
 type Options = {
   method: Method;
   headers?: ?{ [key: string]: string };
-  withCredentials: boolean;
+  xhrFields: { [key: string]: mixed };
   onProgress?: (num: number) => mixed;
   data?: ?{ [key: string]: mixed };
 }
@@ -37,7 +37,7 @@ function ajaxOptions (options: Options): ?{} {
     return {
       data: options.data,
       headers: options.headers,
-      withCredentials: options.withCredentials
+      xhrFields: options.xhrFields
     }
   }
 
@@ -58,7 +58,7 @@ function ajaxOptions (options: Options): ?{} {
       cache: false,
       processData: false,
       data: formData,
-      withCredentials: options.withCredentials,
+      xhrFields: options.xhrFields,
       headers: options.headers,
       xhr: xhrWithProgress(options),
       contentType: false
@@ -68,7 +68,7 @@ function ajaxOptions (options: Options): ?{} {
   return Object.assign({}, baseOptions, {
     contentType: 'application/json',
     headers: options.headers,
-    withCredentials: options.withCredentials,
+    xhrFields: options.xhrFields,
     data: options.data ? JSON.stringify(options.data) : null
   })
 }

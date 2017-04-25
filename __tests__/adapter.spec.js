@@ -3,10 +3,8 @@ import jq from 'jquery'
 
 adapter.apiPath = '/api'
 adapter.commonOptions = {
-  headers: {
-    'SomeHeader': 'test'
-  },
-  withCredentials: true
+  headers: { 'SomeHeader': 'test' },
+  xhrFields: { withCredentials: true }
 }
 
 const noop = () => {}
@@ -82,7 +80,7 @@ describe('adapter', () => {
           expect(jq.ajax.mock.calls[0][1]).toEqual({
             data,
             headers: { 'SomeHeader': 'test' },
-            withCredentials: true
+            xhrFields: { withCredentials: true }
           })
         })
       })
@@ -133,7 +131,7 @@ describe('adapter', () => {
             method: 'POST',
             contentType: 'application/json',
             headers: { 'SomeHeader': 'test' },
-            withCredentials: true,
+            xhrFields: { withCredentials: true },
             data: '{"name":"paco"}'
           })
         })
@@ -212,7 +210,7 @@ describe('adapter', () => {
             method: 'PUT',
             contentType: 'application/json',
             headers: { 'SomeHeader': 'test' },
-            withCredentials: true,
+            xhrFields: { withCredentials: true },
             data: '{"name":"paco"}'
           })
         })
@@ -262,7 +260,7 @@ describe('adapter', () => {
             method: 'DELETE',
             contentType: 'application/json',
             headers: { 'SomeHeader': 'test' },
-            withCredentials: true,
+            xhrFields: { withCredentials: true },
             data: null
           })
         })
