@@ -125,6 +125,13 @@ export default {
     )
   },
 
+  patch (path: string, data: ?{}, options?: {} = {}): Request {
+    return ajax(
+      `${this.apiPath}${path}`,
+      merge({}, { method: 'PATCH', data }, this.commonOptions, options)
+    )
+  },
+
   del (path: string, options?: {} = {}): Request {
     return ajax(
       `${this.apiPath}${path}`,

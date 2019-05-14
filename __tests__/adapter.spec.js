@@ -235,6 +235,57 @@ describe('adapter', () => {
     })
   })
 
+  describe('patch', () => {
+    let ret
+    const data = { name: 'paco' }
+
+    const action = () => {
+      ret = adapter.patch('/users', data)
+    }
+
+    describe('when it resolves', () => {
+      const values = { id: 1, name: 'paco' }
+
+      beforeEach(() => {
+        injectDone(values)
+        action()
+      })
+
+      it('sends a xhr request with data parameters', () => {
+        expect(ret.abort).toBeTruthy()
+
+        return ret.promise.then((vals) => {
+          expect(vals).toEqual(values)
+          expect(jq.ajax.mock.calls[0][0]).toBe('/api/users')
+          expect(jq.ajax.mock.calls[0][1]).toEqual({
+            method: 'PATCH',
+            contentType: 'application/json',
+            headers: { 'SomeHeader': 'test' },
+            xhrFields: { withCredentials: true },
+            data: '{"name":"paco"}'
+          })
+        })
+      })
+    })
+
+    describe('when it fails', () => {
+      const values = '{"errors": ["foo"]}'
+
+      beforeEach(() => {
+        injectFail(values)
+        action()
+      })
+
+      it('sends a xhr request with data parameters', () => {
+        expect(ret.abort).toBeTruthy()
+
+        return ret.promise.catch((vals) => {
+          expect(vals).toEqual(['foo'])
+        })
+      })
+    })
+  })
+
   describe('del', () => {
     let ret
 
