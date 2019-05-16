@@ -289,9 +289,7 @@ describe('adapter', () => {
   describe('del', () => {
     let ret
 
-    const action = () => {
-      ret = adapter.del('/users')
-    }
+    const action = () => { ret = adapter.del('/users', { foo: 'bar' }) }
 
     describe('when it resolves', () => {
       const values = { id: 1, name: 'paco' }
@@ -312,7 +310,7 @@ describe('adapter', () => {
             contentType: 'application/json',
             headers: { 'SomeHeader': 'test' },
             xhrFields: { withCredentials: true },
-            data: null
+            data: '{"foo":"bar"}'
           })
         })
       })
