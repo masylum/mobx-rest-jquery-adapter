@@ -132,10 +132,10 @@ export default {
     )
   },
 
-  del (path: string, options?: {} = {}): Request {
+  del (path: string, data: ?{}, options?: {} = {}): Request {
     return ajax(
       `${this.apiPath}${path}`,
-      merge({}, { method: 'DELETE' }, this.commonOptions, options)
+      merge({}, { method: 'DELETE', data }, this.commonOptions, options)
     )
   }
 }
