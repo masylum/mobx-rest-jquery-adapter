@@ -1,6 +1,6 @@
 {
   "name": "mobx-rest-jquery-adapter",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "jQuery adapter for mobx-rest",
   "repository": {
     "type": "git",
