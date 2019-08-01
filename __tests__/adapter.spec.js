@@ -182,6 +182,33 @@ describe('adapter', () => {
         })
       })
     })
+
+    describe('when it contains an array of files', () => {
+      const values = [{ id: 1, avatar: 'lol.png' }]
+
+      beforeEach(() => {
+        data = { files: [new File([''], 'filename')] }
+        injectDone(values)
+        action()
+      })
+
+      it('sends a xhr request with data parameters', () => {
+        expect(ret.abort).toBeTruthy()
+
+        return ret.promise.then((vals) => {
+          const res = jq.ajax.mock.calls[0][1]
+
+          expect(vals).toEqual(values)
+          expect(jq.ajax.mock.calls[0][0]).toBe('/api/users')
+          expect(res.cache).toBe(false)
+          expect(res.contentType).toBe(false)
+          expect(res.data).toBeTruthy()
+          expect(res.method).toBe('POST')
+          expect(res.processData).toBe(false)
+          expect(res.xhr).toBeTruthy()
+        })
+      })
+    })
   })
 
   describe('put', () => {
