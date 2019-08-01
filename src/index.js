@@ -1,6 +1,7 @@
 // @flow
 import jq from 'jquery'
-import { forEach, isNull, merge } from 'lodash'
+import { buildFormData } from './utils'
+import { merge } from 'lodash'
 
 type Request = {
   abort: () => void;
@@ -41,17 +42,8 @@ function ajaxOptions (options: Options): ?{} {
     }
   }
 
-  const formData = new FormData()
-  let hasFile = false
-
-  forEach(options.data, (val: any, attr: string) => {
-    hasFile = hasFile || val instanceof File
-    if (!isNull(val)) formData.append(attr, val)
-  })
-
-  const baseOptions = {
-    method: options.method
-  }
+  const { hasFile, formData } = buildFormData(options.data)
+  const baseOptions = { method: options.method }
 
   if (hasFile) {
     return Object.assign({}, baseOptions, {
