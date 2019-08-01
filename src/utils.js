@@ -14,7 +14,7 @@ export function buildFormData (data: ?{ [key: string]: mixed }) {
 
     if (isArray(val)) {
       hasFile = hasFile || arrayHasFile(val)
-      return formData.append(`${attr}[]`, val)
+      return forEach(val, _val => formData.append(`${attr}[]`, _val))
     }
 
     if (!isNull(val)) formData.append(attr, val)
