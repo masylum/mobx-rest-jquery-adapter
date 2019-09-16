@@ -79,7 +79,9 @@ function ajax (url: string, options: Options): Request {
   const promise = new Promise((resolve, reject) => {
     xhr
       .done(resolve)
-      .fail((jqXHR, _textStatus) => {
+      .fail((jqXHR, textStatus) => {
+        if (textStatus === 'abort') return resolve({})
+
         const json = parseJson(jqXHR.responseText)
         const ret = json ? json.errors : {}
 
